@@ -1,0 +1,1 @@
+(setq grep-command "ack --nogroup ")
