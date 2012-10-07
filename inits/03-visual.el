@@ -19,9 +19,12 @@
            (ari:add-hook-fn (ari-symbol:symbol-concat m '-hook)
                             (setq show-trailing-whitespace t)
                             (font-lock-add-keywords nil
-                             '(("\\<\\(FIXME\\|TODO\\|BUG\\|NOTE\\|KLUDGE\\)" 1 font-lock-warning-face t))))
+                             '(("\\<\\(FIXME\\|TODO\\|BUG\\|NOTE\\|KLUDGE\\|XXX\\)" 1 font-lock-warning-face t))))
            (ari:add-hook-fn 'jaspace-mode-hook
                         (assq-delete-all 'jaspace-mode minor-mode-alist))))
+
+(ari:add-hook-fn 'cperl-mode-hook
+                 (font-lock-add-keywords nil '(("\\(throw\\|render\\)" 1 font-lock-keyword-face t))))
 
 ;; カーソル行をハイライト
 (defface hlline-face
@@ -61,13 +64,13 @@
 (setq-default line-spacing 0.1)
 
 ;; 日本語フォント
-(defun set-jp-font ()
+(defun set-jp-font (font)
   (when (display-graphic-p)
     (set-fontset-font
      (frame-parameter nil 'font)
      'japanese-jisx0208
-     '("Hiragino Maru Gothic Pro" . "iso10646-1"))))
-(ari:add-hook-fn 'window-setup-hook (set-jp-font))
+     `(,font . "iso10646-1"))))
+(ari:add-hook-fn 'window-setup-hook (set-jp-font "Hiragino Maru Gothic Pro"))
 
 ;;====================
 ;; Window System
@@ -78,3 +81,22 @@
   (menu-bar-mode 0) ;; メニューバーを消す
   (tool-bar-mode 0) ;; ツールバーを消す
   (toggle-scroll-bar nil)) ;; スクロールバーを消す
+
+(defvar *current-frame-transparency* 85)
+
+(defun set-frame-transparency (amount)
+  (interactive "nTransparency: ")
+  (set-frame-parameter nil 'alpha amount)
+  (setq *current-frame-transparency* amount)
+  (message (concat "Transparency: " (number-to-string *current-frame-transparency*))))
+
+;; 不透明に
+(defun frame-transparency-- ()
+  (interactive)
+  (set-frame-transparency (+ *current-frame-transparency* 5)))
+(global-set-key (kbd "C-(") 'frame-transparency--)
+;; 透明に
+(defun frame-transparency-+ ()
+  (interactive)
+  (set-frame-transparency (- *current-frame-transparency* 5)))
+(global-set-key (kbd "C-)") 'frame-transparency-+)

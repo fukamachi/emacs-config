@@ -1,10 +1,10 @@
 ;; js2-mode
 (ari:when-autoloads (js2-mode) "js2"
-  (setq js2-basic-offset 2
+  (setq js2-basic-offset 4
         js2-mirror-mode nil)
   (ari:when-require espresso
-       (setq espresso-indent-level 2
-             espresso-expr-indent-offset 2
+       (setq espresso-indent-level 4
+             espresso-expr-indent-offset 4
              indent-tabs-mode nil)
    (defun my-js-indent-line ()
     (interactive)

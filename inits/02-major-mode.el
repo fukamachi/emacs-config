@@ -18,7 +18,7 @@
     (css-mode . "\\.css$")
     (nxml-mode . "\\.\\(xml\\|svg\\|wsdl\\|xslt\\|wsdd\\|xsl\\|rng\\|xhtml\\|jsp\\|tag\\)$")
     (markdown-mode . "\\.\\(md\\|markdown\\)$")
-    (html-mode . "\\.\\(html\\|htm\\|emb\\|tmpl\\)$")
+    (html-mode . "\\.\\(html\\|htm\\|emb\\|tmpl\\|tt\\)$")
     (hatena-diary-mode . "\\.htn$")))
 
 ;; auto-mode-alist

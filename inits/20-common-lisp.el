@@ -10,6 +10,7 @@
              (ecl ("/usr/local/bin/ecl")); :coding-system utf-8-unix)
              (cmucl ("/usr/local/bin/cmucl") :coding-system utf-8-unix)
              (sbcl ("/usr/local/bin/sbcl") :coding-system utf-8-unix)
+             (abcl ("/usr/local/bin/abcl -XX:MaxPermSize=256m -Dfile.encoding=UTF-8") :coding-system utf-8-unix)
              (clisp ("/usr/local/bin/clisp") :coding-system utf-8-unix)))
      (ari:add-hook-fn 'slime-mode-hook
                   (unless (slime-connected-p)

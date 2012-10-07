@@ -56,6 +56,9 @@
 ;; 起動時のメッセージを非表示
 (setq inhibit-startup-message t)
 
+;; scratchの初期メッセージ消去
+(setq initial-scratch-message "")
+
 ;; lisp-interaction-modeを使わない
 (setq initial-major-mode 'emacs-lisp-mode)
 
