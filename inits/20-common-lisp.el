@@ -1,7 +1,9 @@
 ;; Common lisp
 (require 'cl-indent-patches nil t)
+
 (when (file-exists-p (expand-file-name "~/quicklisp/slime-helper.el"))
   (load (expand-file-name "~/quicklisp/slime-helper.el")))
+
 (ari:when-require slime
      (setq slime-default-lisp 'ccl)
      (setq slime-lisp-implementations
@@ -58,6 +60,20 @@
          (slime-eval-in-repl (format "(ql:quickload :%s)" system))))
  )
 
+;; ParEdit
+(ari:when-autoloads (paredit-mode) "paredit"
+ (global-set-key (kbd "M-l") 'paredit-forward-slurp-sexp)
+ (global-set-key (kbd "M-h") 'paredit-forward-barf-sexp)
+ (global-set-key (kbd "M-9") 'paredit-wrap-round)
+ (define-key paredit-mode-map (kbd "C-j") 'next-line)
+ (define-key paredit-mode-map (kbd "C-k") 'previous-line))
+(loop for mode in '(emacs-lisp-mode
+                    lisp-mode
+                    lisp-interaction-mode
+                    scheme-mode)
+      collect (ari:add-hook-fn (intern (concat (symbol-name mode) "-hook"))
+                 (paredit-mode t)))
+
 ;; Hyperspec
 (defvar *anything-common-lisp-sources* nil)
 
@@ -108,3 +124,18 @@
  '((?Λ ("\\<lambda\\>" lisp lisp-interaction emacs-lisp scheme))
    (?φ ("\\<nil\\>" lisp lisp-interaction emacs-lisp scheme))
    (?Λ ("\\<function\\>" js2))))
+
+(defun closure-compile ()
+  (interactive)
+  (let ((name (buffer-file-name)))
+    (save-buffer)
+    (slime-eval `(cl:progn
+		  (closure-template:compile-cl-templates (cl:pathname ,name))
+		  nil)
+		'cl-user)
+    (message name)))
+
+(add-hook 'closure-template-html-mode-hook
+	  (lambda ()
+	    (interactive)
+	    (local-set-key (kbd "C-c C-g") 'closure-compile)))

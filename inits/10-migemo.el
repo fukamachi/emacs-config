@@ -1,4 +1,3 @@
-(when nil
 (ari:when-require migemo
  (if (linuxp)
      (setq migemo-command "migemo"
@@ -10,4 +9,4 @@
  (setq migemo-user-dictionary nil
        migemo-coding-system 'utf-8-unix
        migemo-regex-dictionary nil)
- (setq moccur-use-migemo t)))
+ (setq moccur-use-migemo t))

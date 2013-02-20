@@ -53,6 +53,33 @@
 
 (define-keys)
 
+(defun next-file (&optional reversep)
+  (let* ((filename (file-name-nondirectory (buffer-file-name)))
+         (dirname (file-name-directory (buffer-file-name)))
+         (dir-files
+          (remove-if (lambda (f) (or (string= f ".")
+                                (string= f "..")))
+                     (directory-files dirname))))
+    (when reversep
+      (setq dir-files
+            (nreverse dir-files)))
+    (loop while dir-files
+          for file = (pop dir-files)
+          if (string= file filename)
+            return (car dir-files))))
+(defun open-next-file ()
+  (interactive)
+  (ari:aif (next-file)
+    (find-file it)
+    (message "Nothing to see anymore.")))
+(defun open-previous-file ()
+  (interactive)
+  (ari:aif (next-file t)
+    (find-file it)
+    (message "Nothing to see anymore.")))
+(global-set-key (kbd "M-<down>") 'open-next-file)
+(global-set-key (kbd "M-<up>") 'open-previous-file)
+
 ;;====================
 ;; Window
 ;;====================
@@ -81,6 +108,31 @@
 (define-key windmove-map "s" 'split-window-conditional)
 (ari:define-key-fn windmove-map "n"
   (split-window-conditional) (switch-to-buffer "*scratch*"))
+
+; 画面の3分割
+; http://d.hatena.ne.jp/yascentur/20110621/1308585547
+(defun split-window-vertically-n (num_wins)
+  (interactive "p")
+  (if (= num_wins 2)
+      (split-window-vertically)
+    (progn
+      (split-window-vertically
+       (- (window-height) (/ (window-height) num_wins)))
+      (split-window-vertically-n (- num_wins 1)))))
+(defun split-window-horizontally-n (num_wins)
+  (interactive "p")
+  (if (= num_wins 2)
+      (split-window-horizontally)
+    (progn
+      (split-window-horizontally
+       (- (window-width) (/ (window-width) num_wins)))
+      (split-window-horizontally-n (- num_wins 1)))))
+(global-set-key "\C-x@" '(lambda ()
+                           (interactive)
+                           (split-window-vertically-n 3)))
+(global-set-key "\C-x!" '(lambda ()
+                           (interactive)
+                           (split-window-horizontally-n 3)))
 
 ;;====================
 ;; Killing

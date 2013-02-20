@@ -53,7 +53,12 @@
 (display-time)
 
 ;; モード行にバッテリ残量を表示
-(display-battery-mode t)
+(when (and (require 'battery nil t)
+           battery-status-function
+           (not (string-match-p "N/A"
+                                (battery-format "%B"
+                                                (funcall battery-status-function)))))
+  (display-battery-mode t))
 
 ;; 改行コードを表示
 (setq eol-mnemonic-dos "(CRLF)"
@@ -70,7 +75,10 @@
      (frame-parameter nil 'font)
      'japanese-jisx0208
      `(,font . "iso10646-1"))))
-(ari:add-hook-fn 'window-setup-hook (set-jp-font "Hiragino Maru Gothic Pro"))
+(ari:add-hook-fn 'window-setup-hook
+ (custom-set-faces
+  '(default ((t (:height 120 :family "Menlo")))))
+ (set-jp-font "Hiragino Maru Gothic Pro"))
 
 ;;====================
 ;; Window System

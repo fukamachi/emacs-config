@@ -26,6 +26,10 @@
 (defun linuxp ()
   (eq window-system 'x))
 
+;; Shell
+(defun has-shell-command (command)
+  (= 0 (shell-command (format "which %s" command))))
+
 ;;====================
 ;; General
 ;;====================
