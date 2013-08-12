@@ -95,6 +95,13 @@
       scroll-step 1)
 (setq comint-scroll-show-maximum-output t) ;; for shell-mode
 
+;; システムのdefault.elを読み込まない
+(setq inhibit-default-init t)
+
+;; 最後の行に自動で改行を入れない
+(setq-default require-final-newline nil)
+(setq require-final-newline nil)
+
 ;; beepを消す
 (setq ring-bell-function 'ignore)
 

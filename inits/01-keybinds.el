@@ -17,11 +17,16 @@
   (- (face-attribute 'default :height) 10))
  (set-jp-font))
 
+(defvar maxframe-fullscreen-p nil)
+
 (defun toggle-fullscreen ()
   (interactive)
   (cond
-    ((mac-os-p) (ns-toggle-fullscreen))
-    ((linuxp)
+    ((and (mac-os-p) (< emacs-major-version 24)) (ns-toggle-fullscreen))
+    ((and (mac-os-p) (require 'maxframe nil t))
+     (if maxframe-fullscreen-p (restore-frame) (maximize-frame))
+     (setq maxframe-fullscreen-p (not maxframe-fullscreen-p)))
+    (t
      (if (frame-parameter nil 'fullscreen)
          (set-frame-parameter nil 'fullscreen nil)
          (set-frame-parameter nil 'fullscreen 'fullboth)))))

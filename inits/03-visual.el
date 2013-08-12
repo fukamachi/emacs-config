@@ -86,8 +86,8 @@
 (when window-system
   (server-start) ;; Emacs serverを起動
   (set-frame-parameter nil 'alpha 85) ;; フレームを透過
-  (menu-bar-mode 0) ;; メニューバーを消す
-  (tool-bar-mode 0) ;; ツールバーを消す
+  (menu-bar-mode -1) ;; メニューバーを消す
+  (tool-bar-mode -1) ;; ツールバーを消す
   (toggle-scroll-bar nil)) ;; スクロールバーを消す
 
 (defvar *current-frame-transparency* 85)

@@ -7,9 +7,9 @@
  (define-key evil-insert-state-map (kbd "C-k") 'previous-line)
  (define-key evil-insert-state-map (kbd "C-j") 'next-line)
 
- (ari:define-key-fn evil-normal-state-map "D" (if paredit-mode (kill-sexp) (kill-line)))
+ (ari:define-key-fn evil-normal-state-map "D" (if (and (boundp 'paredit-mode) paredit-mode) (kill-sexp) (kill-line)))
  (ari:define-key-fn evil-normal-state-map "C"
-  (if paredit-mode (kill-sexp) (kill-line))
+  (if (and (boundp 'paredit-mode) paredit-mode) (kill-sexp) (kill-line))
   (evil-insert 1))
 
  (define-key evil-normal-state-map ")" 'paredit-forward-up)

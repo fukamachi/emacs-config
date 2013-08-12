@@ -135,7 +135,8 @@
 		'cl-user)
     (message name)))
 
-(add-hook 'closure-template-html-mode-hook
-	  (lambda ()
-	    (interactive)
-	    (local-set-key (kbd "C-c C-g") 'closure-compile)))
+(ari:when-require closure-template-html-mode
+ (add-hook 'closure-template-html-mode-hook
+  (lambda ()
+    (interactive)
+    (local-set-key (kbd "C-c C-g") 'closure-compile))))

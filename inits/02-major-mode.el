@@ -16,6 +16,7 @@
     (LaTeX-mode . "\\.tex$")
     (org-mode . "\\.org$")
     (css-mode . "\\.css$")
+    (less-css-mode . "\\.less$")
     (nxml-mode . "\\.\\(xml\\|svg\\|wsdl\\|xslt\\|wsdd\\|xsl\\|rng\\|xhtml\\|jsp\\|tag\\)$")
     (markdown-mode . "\\.\\(md\\|markdown\\)$")
     (html-mode . "\\.\\(html\\|htm\\|emb\\|tmpl\\|tt\\)$")
