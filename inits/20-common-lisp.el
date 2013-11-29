@@ -1,5 +1,4 @@
 ;; Common lisp
-(require 'cl-indent-patches nil t)
 
 (when (file-exists-p (expand-file-name "~/quicklisp/slime-helper.el"))
   (load (expand-file-name "~/quicklisp/slime-helper.el")))
@@ -22,11 +21,9 @@
                   (define-key slime-repl-mode-map (kbd "C-j") 'next-line)
                   (define-key slime-repl-mode-map (kbd "M-r") 'anything-for-files)
                   (define-key slime-scratch-mode-map (kbd "C-n") 'slime-eval-print-last-expression)
-                  (define-key slime-scratch-mode-map (kbd "C-j") 'next-line)
-;                  (define-key slime-repl-mode-map (kbd "s") 'slime-selector)
-      )
+                  (define-key slime-scratch-mode-map (kbd "C-j") 'next-line))
      (setq slime-autodoc-use-multiline-p t)
-     (slime-setup '(slime-repl slime-fancy slime-banner slime-js))
+     (slime-setup '(slime-repl slime-fancy slime-banner slime-indentation slime-js))
      ;(global-set-key [f5] 'slime-js-reload)
      (add-hook 'js2-mode-hook
                (lambda ()
