@@ -5,5 +5,6 @@
 
 ;; direx
 (ari:when-require direx
- (global-set-key (kbd "C-x d") 'direx:find-directory)
+ (global-set-key (kbd "C-c d") 'direx:find-directory-other-window)
+ (global-set-key (kbd "C-c C-d") 'direx:find-directory-other-window)
  (global-set-key (kbd "C-c C-j") 'direx:jump-to-directory-other-window))

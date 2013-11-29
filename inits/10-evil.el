@@ -24,5 +24,9 @@
  (when (locate-library "elscreen")
    (define-key evil-normal-state-map "gp" 'elscreen-previous) ;previous tab
    (define-key evil-normal-state-map "gn" 'elscreen-next) ;next tab
-   (define-key evil-normal-state-map "gt" 'elscreen-create)
-   ))
+   (define-key evil-normal-state-map "gt" 'elscreen-create))
+
+ (when (locate-library "direx")
+   (evil-define-key 'normal direx-mode "j" 'direx:next-node)
+   (evil-define-key 'normal direx-mode "k" 'direx:previous-node))
+   (define-key evil-normal-state-map (kbd "RET") 'direx:maybe-find-node))
