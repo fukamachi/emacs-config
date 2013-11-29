@@ -12,10 +12,10 @@
   (if (and (boundp 'paredit-mode) paredit-mode) (kill-sexp) (kill-line))
   (evil-insert 1))
 
- (define-key evil-normal-state-map ")" 'paredit-forward-up)
- (define-key evil-normal-state-map "(" 'paredit-backward-up)
- (define-key evil-normal-state-map (kbd "C-0") 'paredit-backward-down)
- (define-key evil-normal-state-map (kbd "C-9") 'paredit-forward-down)
+ (evil-define-key 'normal paredit-mode ")" 'paredit-forward-up)
+ (evil-define-key 'normal paredit-mode "(" 'paredit-backward-up)
+ (evil-define-key 'normal paredit-mode (kbd "C-0") 'paredit-backward-down)
+ (evil-define-key 'normal paredit-mode (kbd "C-9") 'paredit-forward-down)
 
  (when (locate-library "slime")
    (define-key evil-normal-state-map (kbd "M-.") 'slime-edit-definition)

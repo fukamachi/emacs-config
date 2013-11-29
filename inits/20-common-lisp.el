@@ -54,8 +54,24 @@
      (ari:when-require cl-test-more
        (defun slime-test-system (system)
          (interactive "SSystem: ")
-         (slime-eval-in-repl (format "(ql:quickload :%s)" system))))
+         (slime-eval-in-repl (format "(asdf:test-system :%s)" system))))
  )
+
+;; Syntax table
+(modify-syntax-entry ?\[ "(]" lisp-mode-syntax-table)
+(modify-syntax-entry ?\] ")[" lisp-mode-syntax-table)
+(modify-syntax-entry ?\{ "(}" lisp-mode-syntax-table)
+(modify-syntax-entry ?\} "){" lisp-mode-syntax-table)
+
+;; Paredit keys
+(eval-after-load "paredit"
+  '(progn
+    (define-key paredit-mode-map "[" 'paredit-open-bracket)
+    (define-key paredit-mode-map "]" 'paredit-close-bracket)
+    (define-key paredit-mode-map "(" 'paredit-open-parenthesis)
+    (define-key paredit-mode-map ")" 'paredit-close-parenthesis)
+    (define-key paredit-mode-map "{" 'paredit-open-curly)
+    (define-key paredit-mode-map "}" 'paredit-close-curly)))
 
 ;; ParEdit
 (ari:when-autoloads (paredit-mode) "paredit"
@@ -103,8 +119,8 @@
 
 (defun anything-hyperspec-and-cltl2 ()
   (interactive)
-  (anything (reverse *anything-common-lisp-sources*) (thing-at-point 'symbol)))
-(global-set-key (kbd "M-l") 'anything-hyperspec-and-cltl2)
+  (anything (reverse *anything-common-lisp-sources*) ""))
+(global-set-key (kbd "M-?") 'anything-hyperspec-and-cltl2)
 
 (defun set-pretty-patterns (patterns)
   (loop for (glyph . pairs) in patterns do
@@ -118,18 +134,18 @@
                                                                        (match-end ,n)
                                                                        ,glyph)))))))))))
 (set-pretty-patterns
- '((?Λ ("\\<lambda\\>" lisp lisp-interaction emacs-lisp scheme))
+ '((?λ ("\\<lambda\\>" lisp lisp-interaction emacs-lisp scheme))
    (?φ ("\\<nil\\>" lisp lisp-interaction emacs-lisp scheme))
-   (?Λ ("\\<function\\>" js2))))
+   (?λ ("\\<function\\>" js2))))
 
 (defun closure-compile ()
   (interactive)
   (let ((name (buffer-file-name)))
     (save-buffer)
     (slime-eval `(cl:progn
-		  (closure-template:compile-cl-templates (cl:pathname ,name))
-		  nil)
-		'cl-user)
+                  (closure-template:compile-cl-templates (cl:pathname ,name))
+                  nil)
+                'cl-user)
     (message name)))
 
 (ari:when-require closure-template-html-mode
