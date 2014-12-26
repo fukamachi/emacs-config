@@ -8,6 +8,7 @@
 (set-face-foreground 'paren-face "#666666")
 
 (dolist (mode '(lisp-mode
+                cl21-mode
                 emacs-lisp-mode
                 scheme-mode))
   (font-lock-add-keywords mode

@@ -1,10 +1,10 @@
 ;; js2-mode
 (ari:when-autoloads (js2-mode) "js2"
-  (setq js2-basic-offset 4
+  (setq js2-basic-offset 2
         js2-mirror-mode nil)
   (ari:when-require espresso
-       (setq espresso-indent-level 4
-             espresso-expr-indent-offset 4
+       (setq espresso-indent-level 2
+             espresso-expr-indent-offset 2
              indent-tabs-mode nil)
    (defun my-js-indent-line ()
     (interactive)
@@ -24,3 +24,5 @@
     (font-lock-add-keywords nil
      '(("^[^\n]\\{80\\}\\(.*\\)$" 1 font-lock-warning-face t)))
     (set (make-local-variable 'indent-line-function) 'my-js-indent-line))))
+
+(ari:when-autoloads (coffee-mode) "coffee-mode")

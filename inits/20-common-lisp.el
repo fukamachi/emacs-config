@@ -3,65 +3,71 @@
 (when (file-exists-p (expand-file-name "~/quicklisp/slime-helper.el"))
   (load (expand-file-name "~/quicklisp/slime-helper.el")))
 
+(require 'slime-autoloads nil t)
+
+(when (file-exists-p (expand-file-name "~/quicklisp/log4slime-setup.el"))
+  (load (expand-file-name "~/quicklisp/log4slime-setup.el"))
+  (global-log4slime-mode 1))
+
 (ari:when-require slime
-     (setq slime-default-lisp 'ccl)
-     (setq slime-lisp-implementations
-           '((ccl ("/usr/local/bin/ccl64") :coding-system utf-8-unix)
-             (alisp ("/usr/local/bin/alisp") :coding-system utf-8-unix)
-             (ecl ("/usr/local/bin/ecl")); :coding-system utf-8-unix)
-             (cmucl ("/usr/local/bin/cmucl") :coding-system utf-8-unix)
-             (sbcl ("/usr/local/bin/sbcl") :coding-system utf-8-unix)
-             (abcl ("/usr/local/bin/abcl -XX:MaxPermSize=256m -Dfile.encoding=UTF-8") :coding-system utf-8-unix)
-             (clisp ("/usr/local/bin/clisp") :coding-system utf-8-unix)))
-     (ari:add-hook-fn 'slime-mode-hook
-                  (unless (slime-connected-p)
-                    (save-excursion (slime)))
-                  (global-set-key (kbd "C-c s") 'slime-selector)
-                  (define-key slime-repl-mode-map (kbd "C-n") 'slime-repl-newline-and-indent)
-                  (define-key slime-repl-mode-map (kbd "C-j") 'next-line)
-                  (define-key slime-repl-mode-map (kbd "M-r") 'anything-for-files)
-                  (define-key slime-scratch-mode-map (kbd "C-n") 'slime-eval-print-last-expression)
-                  (define-key slime-scratch-mode-map (kbd "C-j") 'next-line))
-     (setq slime-autodoc-use-multiline-p t)
-     (slime-setup '(slime-repl slime-fancy slime-banner slime-indentation slime-js))
-     ;(global-set-key [f5] 'slime-js-reload)
-     (add-hook 'js2-mode-hook
-               (lambda ()
-                 (slime-js-minor-mode 1)))
+  (setq slime-default-lisp 'sbcl)
+  (setq slime-lisp-implementations
+        `((ccl ("~/.cim/bin/ccl-1.9") :coding-system utf-8-unix)
+          (alisp ("/usr/local/bin/alisp") :coding-system utf-8-unix)
+          (ecl ("/usr/local/bin/ecl"))  ; :coding-system utf-8-unix)
+          (cmucl ("/usr/local/bin/cmucl") :coding-system utf-8-unix)
+          (sbcl ("ros" "+R" "-l" "~/.sbclrc" "run") :coding-system utf-8-unix)
+          (abcl ("~/.cim/bin/abcl-1.3.1" "-XX:MaxPermSize=256m" "-Dfile.encoding=UTF-8") :coding-system utf-8-unix)
+          (clisp ("/usr/local/bin/clisp") :coding-system utf-8-unix)))
+  (ari:add-hook-fn 'slime-mode-hook
+                   (unless (slime-connected-p)
+                     (save-excursion (slime)))
+                   (global-set-key (kbd "C-c s") 'slime-selector)
+                   (define-key slime-repl-mode-map (kbd "C-n") 'slime-repl-newline-and-indent)
+                   (define-key slime-repl-mode-map (kbd "C-j") 'next-line)
+                   (define-key slime-repl-mode-map (kbd "M-r") 'anything-for-files)
+                   (define-key slime-scratch-mode-map (kbd "C-n") 'slime-eval-print-last-expression)
+                   (define-key slime-scratch-mode-map (kbd "C-j") 'next-line))
+  (setq slime-autodoc-use-multiline-p t)
+  (slime-setup '(slime-repl slime-fancy slime-repl-ansi-color slime-banner slime-indentation slime-js))
+  (when (file-exists-p (expand-file-name "~/Programs/lib/cl21/cl21-mode.el"))
+    (load (expand-file-name "~/Programs/lib/cl21/cl21-mode.el")))
+  (add-hook 'js2-mode-hook
+            (lambda ()
+              (slime-js-minor-mode 1)))
 
-     ;; ac-slime
-     (ari:when-require ac-slime
-          (ari:add-hook-fn 'slime-repl-mode-hook (set-up-slime-ac)))
+  ;; ac-slime
+  (ari:when-require ac-slime
+    (ari:add-hook-fn 'slime-repl-mode-hook (set-up-slime-ac)))
 
-     ;; for Clack
-     (defun clack-slime-search-buffer-package ()
-       (let ((case-fold-search t)
-             (regexp (concat "^(\\(clack.util:\\)?namespace\\>[ \t']*"
-                             "\\([^\n)]+\\)")))
-         (save-excursion
-           (if (or (re-search-backward regexp nil t)
-                   (re-search-forward regexp nil t))
-               (match-string-no-properties 2)
-               (slime-search-buffer-package)))))
-     (setq slime-find-buffer-package-function 'clack-slime-search-buffer-package)
+  ;; for Clack
+  (defun clack-slime-search-buffer-package ()
+    (let ((case-fold-search t)
+          (regexp (concat "^(\\(clack.util:\\)?namespace\\>[ \t']*"
+                          "\\([^\n)]+\\)")))
+      (save-excursion
+        (if (or (re-search-backward regexp nil t)
+                (re-search-forward regexp nil t))
+            (match-string-no-properties 2)
+          (slime-search-buffer-package)))))
+  (setq slime-find-buffer-package-function 'clack-slime-search-buffer-package)
 
-     (setq cl-indent-keywords-patch-ignore-regexps '("(\\(clack.util:\\)?namespace" "(defpackage"))
-
-     ;; cl-annot
-     (font-lock-add-keywords 'lisp-mode '(("\\(?:^\\|[^,]\\)\\(@\\(?:\\sw\\|\\s_\\)+\\)" (1 font-lock-comment-face))))
-
-     ;; CL-TEST-MORE
-     (ari:when-require cl-test-more
-       (defun slime-test-system (system)
-         (interactive "SSystem: ")
-         (slime-eval-in-repl (format "(asdf:test-system :%s)" system))))
- )
+  ;; CL-TEST-MORE
+  (ari:when-require cl-test-more
+    (defun slime-test-system (system)
+      (interactive "SSystem: ")
+      (slime-eval-in-repl (format "(asdf:test-system :%s)" system)))))
 
 ;; Syntax table
 (modify-syntax-entry ?\[ "(]" lisp-mode-syntax-table)
 (modify-syntax-entry ?\] ")[" lisp-mode-syntax-table)
 (modify-syntax-entry ?\{ "(}" lisp-mode-syntax-table)
 (modify-syntax-entry ?\} "){" lisp-mode-syntax-table)
+
+;; cl-annot
+(font-lock-add-keywords 'lisp-mode '(("\\(?:^\\|[^,]\\)\\(@\\(?:\\sw\\|\\s_\\)+\\)" (1 font-lock-comment-face))))
+;; Dylan-style class naming
+(font-lock-add-keywords 'lisp-mode '(("\\(?:^\\|[^,:]\\)\\(<\\(?:\\sw\\|\\s_\\)+>\\)" (1 font-lock-type-face))))
 
 ;; Paredit keys
 (eval-after-load "paredit"
